@@ -1,0 +1,146 @@
+;;;;;;;;;;;;;;;;;;;;
+;; Server Mode
+;;;;;;;;;;;;;;;;;;;;
+; Start emacs in server mode
+(require 'server)
+(when (and (functionp 'server-running-p) (not (server-running-p)))
+  (server-start))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Generic options
+;;;;;;;;;;;;;;;;;;;;
+
+ ; highlight current line
+(global-hl-line-mode 1)
+; display line numbers in margin (fringe). Emacs 23 only.
+(global-linum-mode 1) ; always show line numbers
+(global-visual-line-mode 1) ; Word wrap option.
+
+; add .emacs.d/elisp
+(setq data-dir (expand-file-name "~/.emacs.d/elisp/"))
+(add-to-list 'load-path data-dir)
+
+; for xml files, use nxml-mode instead of sgml-mode
+(add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
+
+; Use org mode
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+
+;; Changes all yes/no questions to y/n type
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(tool-bar-mode -1) ; don't show the toolbar
+
+(setq visible-bell t) ; flash instead of beep
+
+; copy and paste with clipboard
+(setq x-select-enable-clipboard t)
+
+; geometry
+; TODO: this should be dependent on the screen resolution
+;(add-to-list 'default-frame-alist '(height . 39))
+;(add-to-list 'default-frame-alist '(width . 80))
+
+; scroll bar on the right
+(set-scroll-bar-mode 'right)
+(setq scroll-step 2)
+; always font lock
+(global-font-lock-mode t)
+(setq-default show-trailing-whitespace t)
+
+
+;;;;;;;;;;;;;;;;;;;;
+;; Deal with #foo#
+;;;;;;;;;;;;;;;;;;;;
+(defvar autosave-dir (concat "/tmp/." (user-login-name) "-emacs-autosaves/"))
+(make-directory autosave-dir t)
+
+(defun make-auto-save-file-name ()
+  (concat autosave-dir
+	  (if buffer-file-name
+	      (concat "#" (file-name-nondirectory buffer-file-name) "#")
+	    (expand-file-name (concat "#%" (buffer-name) "#")))))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Searching
+;;;;;;;;;;;;;;;;;;;;
+;; add occur to searching to get all occurences of search string
+(define-key isearch-mode-map (kbd "C-o")
+  (lambda ()
+    (interactive)
+    (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string
+               (regexp-quote isearch-string))))))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Custom settings
+;;;;;;;;;;;;;;;;;;;;
+(setq custom-file (concat data-dir "custom.el"))
+(setq dis-temp (concat data-dir "disable-tempfiles.el"))
+(if (file-exists-p custom-file)
+    (load-file custom-file)
+  (message (concat "** Could not load custom file: " custom-file))
+)
+(if (file-exists-p dis-temp)
+      (load dis-temp)
+  (message (concat "** Could not load custom file: " dis-temp))
+)
+
+;;;;;;;;;;;;;;;;;;;;
+;; Modes / packages
+;;;;;;;;;;;;;;;;;;;;
+;; Generic
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/snippets")
+(require 'auto-complete)
+(require 'auto-complete-yasnippet)
+(require 'smart-operator)
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
+(auto-complete-mode)
+
+;; Python
+(load-library "init_python.el")
+(global-auto-complete-mode t)
+
+;; CSS
+(require 'dot-css)
+
+;; HTML + XML
+(load (concat data-dir "nxhtml/autostart.el"))
+(add-hook 'nxml-mode-hook
+          (lambda ()
+            (flymake-mode 0)))
+
+(add-hook 'nxhtml-mode-hook
+          (lambda ()
+            (flymake-mode 0)))
+
+(add-hook 'xml-mode-hook
+          (lambda ()
+            (flymake-mode 0)))
+
+(setq auto-mode-alist
+      (append
+       (list
+        '("\\.xml" . nxml-mode)
+        '("\\.rng" . nxml-mode)
+        '("\\.xhtml" . nxhtml-mode)
+        '("\\.html" . nxhtml-mode)
+        '("\\.fo" . xsl-mode)
+        '("\\.xsl" . xsl-mode))
+       auto-mode-alist))
+
+;; Shell
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; Tramp
+(setq tramp-default-method "ssh")
+
+;; HTML-FONT-IFY
+(require 'htmlfontify)
+
+;; Ensure auto-complete
+(ac-flyspell-workaround)
+

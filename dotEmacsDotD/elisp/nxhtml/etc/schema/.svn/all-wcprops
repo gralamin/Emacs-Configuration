@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema
+END
+nxml-erb.patch
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/nxml-erb.patch
+END
+qtmstr-xhtml.rnc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/qtmstr-xhtml.rnc
+END
+schema-path-patch.el
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/schema-path-patch.el
+END
+mjt.rnc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/mjt.rnc
+END
+xinclude.rnc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/xinclude.rnc
+END
+genshi-schemas.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/genshi-schemas.xml
+END
+genshi.rnc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/etc/schema/genshi.rnc
+END

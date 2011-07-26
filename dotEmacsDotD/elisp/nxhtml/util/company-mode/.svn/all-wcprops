@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode
+END
+company-elisp.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-elisp.el
+END
+company-dabbrev-code.el
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-dabbrev-code.el
+END
+company-nxml.el
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-nxml.el
+END
+company-pkg.el
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-pkg.el
+END
+company-tempo.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-tempo.el
+END
+company-pysmell.el
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-pysmell.el
+END
+company-ispell.el
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-ispell.el
+END
+company-css.el
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-css.el
+END
+company-eclim.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-eclim.el
+END
+company-autoloads.el
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-autoloads.el
+END
+company-start.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-start.el
+END
+company-predictive.el
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-predictive.el
+END
+company-oddmuse.el
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-oddmuse.el
+END
+company-abbrev.el
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-abbrev.el
+END
+company-xcode.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-xcode.el
+END
+company.el
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company.el
+END
+company-files.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-files.el
+END
+company-etags.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-etags.el
+END
+company-semantic.el
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-semantic.el
+END
+company-gtags.el
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-gtags.el
+END
+company-dabbrev.el
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-dabbrev.el
+END
+company-keywords.el
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-keywords.el
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/README.txt
+END
+company-nograb.el
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-nograb.el
+END
+company-ropemacs.el
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/142/trunk/brettatoms/emacs/packages/nxhtml/util/company-mode/company-ropemacs.el
+END
