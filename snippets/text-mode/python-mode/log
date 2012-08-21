@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# name: log
+# contributor: Glen Nelson
+# --
+import chimeraLogging.chimeraLogging as chimeraLogging
+
+LOG = chimeraLogging.getLogger("${1:LoggerName}")$0
