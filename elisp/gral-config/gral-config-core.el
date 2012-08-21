@@ -2,7 +2,7 @@
 ;; Modes / packages
 ;;;;;;;;;;;;;;;;;;;;
 ;; Generic
-(autoload 'yasnippet)
+(require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/.emacs.d/snippets")
 
