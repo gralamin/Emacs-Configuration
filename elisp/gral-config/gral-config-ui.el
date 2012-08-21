@@ -88,34 +88,17 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Custom settings
 ;;;;;;;;;;;;;;;;;;;;
-(setq custom-file (concat data-dir "custom.el"))
-(setq dis-temp (concat data-dir "disable-tempfiles.el"))
-(if (file-exists-p custom-file)
-    (load-file custom-file)
-  (message (concat "** Could not load custom file: " custom-file))
-)
-(if (file-exists-p client-log)
-    (lambda ()
-      (load client-log)
-      (add-to-list 'auto-mode-alist '("/client\\.log_" . client-log-mode))
-      )
-  (message (concat "** Could not load custom file: " client-log))
-)
-(if (file-exists-p dis-temp)
-      (load dis-temp)
-  (message (concat "** Could not load custom file: " dis-temp))
-)
-
-;; Load packages if it exists and this is emacs 23
-(setq package-file (concat data-dir "package.el"))
-(setq version-value-foo (version))
-(if (string-match "Emacs 23" version-value-foo)
-  (if (file-exists-p package-file)
-      (load package-file)
-    (message (concat "** Could not load custom file: " package-file))
-  )
-  (message (concat "** Emacs version not 23: " version-value-foo))
-)
+(defvar user-temporary-file-directory
+  (concat temporary-file-directory user-login-name "/"))
+(make-directory user-temporary-file-directory t)
+(setq backup-by-copying t)
+(setq backup-directory-alist
+      `(("." . ,user-temporary-file-directory)
+        (,tramp-file-name-regexp nil)))
+(setq auto-save-file-name-transforms
+      `((".*" ,user-temporary-file-directory t)))
+(setq delete-auto-save-files t)                ; no "#" files after a save
+(setq auto-save-list-file-prefix nil)        ; don't record sessions
 
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
@@ -124,7 +107,10 @@
                                                       (abbreviate-file-name (buffer-file-name))
                                                     "%b"))))
 
-;; use zenburn as the default theme
-(load-theme 'zenburn t)
+
+(if (string-match "Emacs 24" (version))
+    (load-theme 'zenburn t) ;; use zenburn as the default theme
+  (message "You are not running Emacs 24. Theming disabled")
+)
 
 (provide 'gral-config-ui)

@@ -4,6 +4,12 @@
 ;; Custom package archive
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("elpa" . "http://tromey.com/elpa/") t)
+(add-to-list 'package-archives
+             '("technomancy" . "http://repo.technomancy.us/emacs/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
 ;; required because of a package.el bug
@@ -14,6 +20,7 @@
     auto-complete
     color-theme
     csv-mode
+    css-mode
     flymake-css
     flymake-jslint
     flymake-sass
@@ -22,10 +29,10 @@
     magithub
     org
     rainbow-mode
-    js2mode
+    js2-mode
     smart-operator
     yasnippet
-    volatile-highlight
+    volatile-highlights
     zenburn-theme)
   "A List of packages to ensure are installed at launch.")
 

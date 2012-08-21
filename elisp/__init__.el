@@ -1,10 +1,8 @@
-;;; init.el Use this as your .emacs
+;;; init.el Use as your .emacs
 
 (message "Gral-config is powering up... Be patient, Master %s!" (getenv "USER"))
 
-(message (file-name-directory load-file-name))
-
-(defvar gral-dir (concat (file-name-directory load-file-name) "elisp/")
+(defvar gral-config-dir (concat (file-name-directory load-file-name) ".emacs.d/elisp/")
   "The root dir of the Emacs Gral-config distribution.")
 (defvar gral-config-modules-dir (concat gral-config-dir "gral-config/")
   "This directory houses all of the built-in Gral-Config module. You should
@@ -26,6 +24,17 @@ ELPA (or MELPA).")
 (add-to-list 'load-path gral-config-dir)
 (add-to-list 'load-path gral-config-modules-dir)
 (add-to-list 'load-path gral-config-vendor-dir)
+
+;; Load packages if it exists and this is emacs 23
+(setq package-file (concat gral-config-vendor-dir "package.el"))
+(setq version-value-foo (version))
+(if (string-match "Emacs 24" version-value-foo)
+    (message "Not loading package.el, as emacs 24 has it included.")
+  (if (file-exists-p package-file)
+      (load package-file)
+    (message (concat "** Could not load custom file: " package-file))
+  ) 
+)
 
 ;; the core stuff
 (require 'auto-package)
