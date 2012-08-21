@@ -32,9 +32,13 @@
     js2-mode
     smart-operator
     yasnippet
-    volatile-highlights
-    zenburn-theme)
+    volatile-highlights)
   "A List of packages to ensure are installed at launch.")
+
+(if (string-match "Emacs 24" (version))
+    (add-to-list 'gral-packages 'zenburn-theme) ;; use zenburn as the default theme
+  (message "You are not running Emacs 24. Theming disabled")
+)
 
 (defun gral-packages-installed-p ()
   (loop for p in gral-packages
@@ -60,11 +64,11 @@
 (gral-install-packages)
 
 (defmacro gral-auto-install (extension package mode)
-  `(add-to-list 'auto-mode-alist
+`(add-to-list 'auto-mode-alist
                 `(,extension . (lambda ()
-                                 unless (package-installed-p ',package)
-                                 (package-intsall ',package))
-                             (,mode))))
+                                 (unless (package-installed-p ',package)
+                                   (package-install ',package))
+                                 (,mode)))))
 
 (defvar gral-auto-install-alist
   '(
@@ -84,5 +88,5 @@
     (unless (package-installed-p package)
       (gral-auto-install extension package mode))))
 
-(provide 'gral-packages)
+(provide 'gral-config-packages)
 ;;; auto-package.el ends here

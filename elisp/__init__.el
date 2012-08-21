@@ -33,11 +33,11 @@ ELPA (or MELPA).")
   (if (file-exists-p package-file)
       (load package-file)
     (message (concat "** Could not load custom file: " package-file))
-  ) 
+  )
 )
 
 ;; the core stuff
-(require 'auto-package)
+(require 'gral-config-packages)
 (require 'gral-config-ui)
 (require 'gral-config-core)
 ;;(require 'gral-config-mode)
