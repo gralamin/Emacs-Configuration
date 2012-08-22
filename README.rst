@@ -10,3 +10,24 @@ everywhere, even if it limits power.
 
 Included is everything required to work much as I do. Customize
 personal if there is anything you feel is missing.
+
+What's new
+==========
+More keybinds, more modes open automatically.
+
+Installation
+============
+* Create a symlink from the repository directory to .emacs.d:
+
+.. code-block: bash
+
+    ln -s ~/git/Emacs-Configuration/ .emacs.d
+
+* Create a symlink from __init__.el to .emacs:
+
+.. code-block: bash
+
+    ln -s ~/git/Emacs-Configuration/elisp/__init__.el .emacs
+
+* Make personal changes in the personal subdirectory - all files there
+  are automatically loaded.

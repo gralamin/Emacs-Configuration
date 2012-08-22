@@ -45,6 +45,9 @@
 (global-set-key (kbd "M-<right>") 'select-next-window)
 (global-set-key (kbd "M-<left>")  'select-previous-window)
 
+;; cycle through buffers
+(global-set-key (kbd "<C-tab>") 'bury-buffer)
+
 ;;;;;;;;;;;;;;;;;;;;
 ;; Searching
 ;;;;;;;;;;;;;;;;;;;;
