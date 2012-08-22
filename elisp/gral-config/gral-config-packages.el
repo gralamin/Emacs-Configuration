@@ -23,6 +23,7 @@
     flex-isearch
     flymake
     flymake-css
+    flymake-cursor
     flymake-jslint
     flymake-sass
     flymake-shell
@@ -30,6 +31,7 @@
     magit
     magithub
     org
+    python-mode
     rainbow-mode
     revive
     js2-mode
@@ -73,6 +75,8 @@
                                    (package-install ',package))
                                  (,mode)))))
 
+(autoload 'python-mode "python-mode" "Python Mode." t)
+
 (defvar gral-auto-install-alist
   '(
     ("\\.csv\\'" csv-mode csv-mode)
@@ -81,7 +85,7 @@
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
     ("\\.php\\'" php-mode php-mode)
-    ("\\.py\\'" python python-mode)
+    ("\\.py\\'" python-mode python-mode)
     ("\\.yml\\'" yaml-mode yaml-mode)
   )
 )
@@ -92,6 +96,8 @@
         (mode (third entry)))
     (unless (package-installed-p package)
       (gral-auto-install extension package mode))))
+
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
 (provide 'gral-config-packages)
 ;;; auto-package.el ends here

@@ -131,8 +131,11 @@
 
 (require 'flymake)
 
-(require 'flymake-python-pyflakes)
-(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+(require 'flymake-pycheckers)
+(add-hook 'python-mode-hook 'flymake-python-pycheckers-load)
+
+;;(require 'flymake-python-pyflakes)
+;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 
 (require 'flymake-shell)
 (add-hook 'sh-mode-hook 'flymake-shell-load)
@@ -145,6 +148,8 @@
 
 (require 'flymake-css)
 (add-hook 'css-mode-hook 'flymake-css-load)
+
+(require 'flymake-cursor)
 
 ;; Make flymake work with html
 (defun flymake-html-init ()

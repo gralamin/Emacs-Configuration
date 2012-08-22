@@ -15,6 +15,10 @@ What's new
 ==========
 More keybinds, more modes open automatically.
 
+Prerequistes
+============
+Assumes pylint, pyflakes, and pep8 are installed.
+
 Installation
 ============
 * Create a symlink from the repository directory to .emacs.d::

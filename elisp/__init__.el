@@ -2,8 +2,12 @@
 
 (message "Gral-config is powering up... Be patient, Master %s!" (getenv "USER"))
 
-(defvar gral-config-dir (concat (file-name-directory load-file-name) ".emacs.d/elisp/")
+(defvar gral-repo-root (concat (file-name-directory load-file-name) ".emacs.d/")
   "The root dir of the Emacs Gral-config distribution.")
+(defvar gral-config-scripts (concat gral-repo-root "scripts/")
+  "scripts to use with gral-config.")
+(defvar gral-config-dir (concat gral-repo-root "elisp/")
+  "The elisp dir of the Emacs Gral-config distribution.")
 (defvar gral-config-modules-dir (concat gral-config-dir "gral-config/")
   "This directory houses all of the built-in Gral-Config module. You should
 avoid modifying the configuration there.")
