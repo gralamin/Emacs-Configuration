@@ -25,6 +25,7 @@
     flymake-jslint
     flymake-sass
     flymake-shell
+    flymake-python-pyflakes
     magit
     magithub
     org
@@ -73,6 +74,7 @@
 
 (defvar gral-auto-install-alist
   '(
+    ("\\.css\\'" css-mode css-mode)
     ("\\.less\\'" less-css-mode less-css-mode)
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
