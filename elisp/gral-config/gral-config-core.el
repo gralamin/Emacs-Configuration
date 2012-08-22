@@ -3,31 +3,9 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Generic
 (require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/.emacs.d/snippets")
-
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
-
-;; Python
-;;(load-library "init_python.el")
-(global-auto-complete-mode t)
-
-;; HTML + XML
-(load (concat data-dir "nxhtml/autostart.el"))
-(setq mumamo-background-colors nil)
-
-(global-whitespace-mode)
+(yas-global-mode 1)
 
 (setq ido-enable-flex-matching t) ; fuzzy matching is a must have
-
-;; Ensure auto-complete
-(ac-flyspell-workaround)
-
-;; Enable flyspell
-(setq flyspell-issue-welcome-flag nil)
-(flyspell-mode)
-
-(put 'scroll-left 'disabled nil)
 
 ;; Refresh Buffer with f5.
 (defun refresh-file ()
@@ -54,22 +32,6 @@
   "Set the selected window to 122 columns."
   (interactive)
   (set-window-width 122))
-
-;; Make flymake work with html
-(defun flymake-html-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                   'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                    temp-file
-                    (file-name-directory buffer-file-name))))
-    (list "tidy" (list local-file))))
-
-(add-to-list 'flymake-allowed-file-name-masks
-             '("\\.html$\\|\\.ctp" flymake-html-init))
-
-(add-to-list 'flymake-err-line-patterns
-             '("line \\([0-9]+\\) column \\([0-9]+\\) - \\(Warning\\|Error\\): \\(.*\\)"
-               nil 1 2 4))
 
 ;; Run unit tests asynchronously
 (defun run-chimera-unit-tests ()

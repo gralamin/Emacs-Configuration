@@ -1,3 +1,0 @@
-#name : full-name (user's email)
-# --
-# File by: `(user-full-name)` (`(replace-regexp-in-string "@" "@" user-mail-address)`)

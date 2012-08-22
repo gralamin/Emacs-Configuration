@@ -29,6 +29,7 @@
     magithub
     org
     rainbow-mode
+    revive
     js2-mode
     smart-operator
     yasnippet

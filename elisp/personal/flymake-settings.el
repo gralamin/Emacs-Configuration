@@ -19,6 +19,8 @@
 ;; write  to  the Free  Software  Foundation,  Inc., 51  Franklin
 ;; Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+(require 'eval-after-load)
+
 (defvar flymake-mode-map (make-sparse-keymap))
 
 (autoload 'flymake-find-file-hook "flymake" "" t)
@@ -28,9 +30,9 @@
 (defun flymake-settings ()
   "Settings for `flymake'."
   (setq flymake-gui-warnings-enabled nil)
-  
+
   (defvar flymake-makefile-filenames '("Makefile" "makefile" "GNUmakefile") "File names for make.")
-  
+
   (defun flymake-get-make-gcc-cmdline (source base-dir)
     (let (found)
       (dolist (makefile flymake-makefile-filenames)
@@ -67,10 +69,10 @@ Use CREATE-TEMP-F for creating temp copy."
                    use-relative-source
                    get-cmdline-f))))
       args))
-  
+
   (defun flymake-simple-make-gcc-init ()
     (flymake-simple-make-gcc-init-impl 'flymake-create-temp-inplace t t "Makefile" 'flymake-get-make-gcc-cmdline))
-  
+
   (setq flymake-allowed-file-name-masks
         '(("\\.\\(?:c\\(?:pp\\|xx\\|\\+\\+\\)?\\|CC\\)\\'" flymake-simple-make-gcc-init)
           ("\\.xml\\'" flymake-xml-init)
