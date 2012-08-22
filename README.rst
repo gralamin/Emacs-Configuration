@@ -17,15 +17,11 @@ More keybinds, more modes open automatically.
 
 Installation
 ============
-* Create a symlink from the repository directory to .emacs.d:
-
-.. code-block: bash
+* Create a symlink from the repository directory to .emacs.d::
 
     ln -s ~/git/Emacs-Configuration/ .emacs.d
 
-* Create a symlink from __init__.el to .emacs:
-
-.. code-block: bash
+* Create a symlink from __init__.el to .emacs::
 
     ln -s ~/git/Emacs-Configuration/elisp/__init__.el .emacs
 
