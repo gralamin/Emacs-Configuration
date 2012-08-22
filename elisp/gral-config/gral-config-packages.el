@@ -18,9 +18,10 @@
 (defvar gral-packages
   '(apache-mode
     auto-complete
-    color-theme
     csv-mode
     css-mode
+    flex-isearch
+    flymake
     flymake-css
     flymake-jslint
     flymake-sass
@@ -74,6 +75,7 @@
 
 (defvar gral-auto-install-alist
   '(
+    ("\\.csv\\'" csv-mode csv-mode)
     ("\\.css\\'" css-mode css-mode)
     ("\\.less\\'" less-css-mode less-css-mode)
     ("\\.lua\\'" lua-mode lua-mode)

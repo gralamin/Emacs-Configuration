@@ -56,12 +56,15 @@
       (occur (if isearch-regexp isearch-string
                (regexp-quote isearch-string))))))
 
-(define-key global-map (kbd "C-+") 'tex-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+(define-key global-map (kbd "C-<kp-add>") 'text-scale-increase)
+(define-key global-map (kbd "C-<kp-subtract>") 'text-scale-decrease)
 
 ;; toggle menu-bar visibility
 (global-set-key (kbd "<f12>") 'menu-bar-mode)
 
 (global-set-key (kbd "C-x g") 'magit-status)
+
+(global-set-key (kbd "C-s") 'flex-isearch-forward)
+(global-set-key (kbd "C-r") 'flex-isearch-backward)
 
 (provide 'gral-config-global-keybindings)

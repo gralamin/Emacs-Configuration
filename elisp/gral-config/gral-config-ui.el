@@ -113,4 +113,60 @@
   (message "You are not running Emacs 24. Theming disabled")
 )
 
+(require 'rainbow-mode)
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
+
+(require 'flex-isearch)
+(global-flex-isearch-mode t)
+
+(require 'auto-complete)
+(require 'auto-complete-yasnippet)
+
+(require 'smart-operator)
+(require 'auto-complete-config)
+
+(require 'whitespace)
+(global-whitespace-mode)
+
+(require 'flymake)
+
+(require 'flymake-python-pyflakes)
+(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+
+(require 'flymake-shell)
+(add-hook 'sh-mode-hook 'flymake-shell-load)
+
+(require 'flymake-sass)
+(add-hook 'sass-mode-hook 'flymake-sass-load)
+
+;;(require 'flymake-js)
+;;(add-hook 'js-mode-hook 'flymake-jslint-load)
+
+(require 'flymake-css)
+(add-hook 'css-mode-hook 'flymake-css-load)
+
+;; Make flymake work with html
+(defun flymake-html-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                   'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                    temp-file
+                    (file-name-directory buffer-file-name))))
+    (list "tidy" (list local-file))))
+
+(add-to-list 'flymake-allowed-file-name-masks
+             '("\\.html$\\|\\.ctp" flymake-html-init))
+
+(add-to-list 'flymake-err-line-patterns
+             '("line \\([0-9]+\\) column \\([0-9]+\\) - \\(Warning\\|Error\\): \\(.*\\)"
+               nil 1 2 4))
+
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
+
+(global-auto-complete-mode t)
+
+;; Ensure auto-complete
+(ac-flyspell-workaround)
+
 (provide 'gral-config-ui)
