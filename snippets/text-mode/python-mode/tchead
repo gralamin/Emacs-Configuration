@@ -1,0 +1,18 @@
+# name: testcase header
+# --
+    """  blurb
+    Test case: `(replace-regexp-in-string ".*/" "" (replace-regexp-in-string "\.py" "" buffer-file-name))`
+
+    Entrance Criteria
+    =================
+    Required: System must be commissioned.
+    Required: System has the full soft configurations.
+
+    Steps
+    =====
+    1)    Step 1
+    2)    Step 2
+    3)    Step 3
+    ...)  ...
+    n)    Step n
+    """
