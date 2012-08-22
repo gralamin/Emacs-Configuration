@@ -35,7 +35,6 @@
     rainbow-mode
     revive
     js2-mode
-    smart-operator
     yasnippet
     volatile-highlights)
   "A List of packages to ensure are installed at launch.")
