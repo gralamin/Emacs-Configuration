@@ -1,9 +1,0 @@
-My emacs configuration specialized towards Python.
-
-To use, rename dotEmacs to .emacs, and dotEmacsDotD to .emacs.d, and place in your home folder.
-
-I've tried to put comments on as many places as possible, including source, and what they do.
-
-A few other packages may be required:
-
-pymacs rope python-rope python-ropemacs pyflakes pylint
