@@ -1,13 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;
-;; Modes / packages
+;; Functions
 ;;;;;;;;;;;;;;;;;;;;
-;; Generic
-(require 'yasnippet)
-(yas-global-mode 1)
 
-(setq ido-enable-flex-matching t) ; fuzzy matching is a must have
-
-;; Refresh Buffer with f5.
+;; Wrappers for existing functions
 (defun refresh-file ()
   (interactive)
   (revert-buffer t t t)
@@ -16,11 +11,6 @@
 (defun occur-python ()
   (interactive)
   (occur "^\\s-*\\(class .*:\\|def .*:\\)")
-)
-
-(defun occur-ssh ()
-  (interactive)
-  (occur "\\(Thread:\\|at: ch.ethz.ssh2.Connection\\)")
 )
 
 ;; Add in the ability to set the size of a window.
@@ -42,7 +32,9 @@
   (interactive)
   (shell-command "/usr/bin/python ~/git/django_chimera/manage.py test metrics &"))
 
-;; Press PAUSE to dedicate a window.
+;; End Wrappers for existing functions
+
+;; New functions
 (defun toggle-current-window-dedication ()
  (interactive)
  (let* ((window    (selected-window))
@@ -138,5 +130,7 @@ and so on."
     (url-hexify-string (if mark-active
          (buffer-substring (region-beginning) (region-end))
        (read-string "Google: "))))))
+
+;; End New functions
 
 (provide 'gral-config-core)

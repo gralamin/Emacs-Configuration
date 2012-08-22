@@ -10,8 +10,6 @@
 (global-visual-line-mode 1) ; Word wrap option.
 (size-indication-mode t); Show file size
 
-; Add .emacs.d/elisp
-
 ; for xml files, use nxml-mode instead of sgml-mode
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
 
@@ -30,11 +28,6 @@
 ; copy and paste with clipboard
 (setq x-select-enable-clipboard t)
 
-; geometry
-; TODO: this should be dependent on the screen resolution
-;(add-to-list 'default-frame-alist '(height . 39))
-;(add-to-list 'default-frame-alist '(width . 80))
-
 ; scroll bar on the right
 (set-scroll-bar-mode 'right)
 (setq scroll-step 2)
@@ -50,19 +43,6 @@
 ;; Turn off fill-column key
 (global-unset-key "\C-xf")
 (setq fill-column 80)
-(add-hook 'rst-mode-hook 'turn-on-auto-fill)
-
-;; Autofill comments
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (auto-fill-mode 1)
-            (set (make-local-variable 'fill-nobreak-predicate)
-                 (lambda ()
-                   (not (eq (get-text-property (point) 'face)
-                            'font-lock-comment-face))))))
-
-;; Shell
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;; Tramp
 (setq tramp-default-method "ssh")
@@ -83,11 +63,83 @@
     (menu-bar-mode -1)))
 
 (gral-config-frame-config (selected-frame))
+
+(setq ido-enable-flex-matching t) ; fuzzy matching is a must have
+
+;;;;;;;;;;;;;;;;;;;;
+;; Requires
+;;;;;;;;;;;;;;;;;;;;
+(require 'yasnippet)
+(require 'rainbow-mode)
+(require 'volatile-highlights)
+
+(require 'flex-isearch)
+
+(require 'auto-complete)
+(require 'auto-complete-yasnippet)
+
+(require 'smart-operator)
+(require 'auto-complete-config)
+
+(require 'whitespace)
+
+(require 'flymake)
+(require 'flymake-cursor)
+(require 'flymake-pycheckers)
+(require 'flymake-shell)
+(require 'flymake-sass)
+(require 'flymake-css)
+;;(require 'flymake-python-pyflakes)
+;;(require 'flymake-js)
+
+;;;;;;;;;;;;;;;;;;;;
+;; Hooks
+;;;;;;;;;;;;;;;;;;;;
+(add-hook 'rst-mode-hook 'turn-on-auto-fill)
+
+;; Autofill comments
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (auto-fill-mode 1)
+            (set (make-local-variable 'fill-nobreak-predicate)
+                 (lambda ()
+                   (not (eq (get-text-property (point) 'face)
+                            'font-lock-comment-face))))))
+
+;; Shell
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; Daemon-mode on make frame
 (add-hook 'after-make-frame-functions 'gral-config-frame-config)
+
+(add-hook 'python-mode-hook 'flymake-python-pycheckers-load)
+(add-hook 'python-mode-hook '(lambda()
+                               (smart-operator-mode-on)
+                               ))
+
+;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+(add-hook 'sh-mode-hook 'flymake-shell-load)
+(add-hook 'sass-mode-hook 'flymake-sass-load)
+
+;;(add-hook 'js-mode-hook 'flymake-jslint-load)
+(add-hook 'css-mode-hook 'flymake-css-load)
+
+;;;;;;;;;;;;;;;;;;;;
+;; Global modes
+;;;;;;;;;;;;;;;;;;;;
+(volatile-highlights-mode t)
+(global-whitespace-mode)
+(global-auto-complete-mode t)
+(global-flex-isearch-mode t)
+(yas-global-mode 1)
+
+;; Ensure auto-complete
+(ac-flyspell-workaround)
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Custom settings
 ;;;;;;;;;;;;;;;;;;;;
+;; Disable temporary files
 (defvar user-temporary-file-directory
   (concat temporary-file-directory user-login-name "/"))
 (make-directory user-temporary-file-directory t)
@@ -107,53 +159,6 @@
                                                       (abbreviate-file-name (buffer-file-name))
                                                     "%b"))))
 
-
-(if (string-match "Emacs 24" (version))
-    (load-theme 'zenburn t) ;; use zenburn as the default theme
-  (message "You are not running Emacs 24. Theming disabled")
-)
-
-(require 'rainbow-mode)
-(require 'volatile-highlights)
-(volatile-highlights-mode t)
-
-(require 'flex-isearch)
-(global-flex-isearch-mode t)
-
-(require 'auto-complete)
-(require 'auto-complete-yasnippet)
-
-(require 'smart-operator)
-(require 'auto-complete-config)
-
-(require 'whitespace)
-(global-whitespace-mode)
-
-(require 'flymake)
-
-(require 'flymake-pycheckers)
-(add-hook 'python-mode-hook 'flymake-python-pycheckers-load)
-(add-hook 'python-mode-hook '(lambda()
-                               (smart-operator-mode-on)
-                               ))
-
-;;(require 'flymake-python-pyflakes)
-;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
-
-(require 'flymake-shell)
-(add-hook 'sh-mode-hook 'flymake-shell-load)
-
-(require 'flymake-sass)
-(add-hook 'sass-mode-hook 'flymake-sass-load)
-
-;;(require 'flymake-js)
-;;(add-hook 'js-mode-hook 'flymake-jslint-load)
-
-(require 'flymake-css)
-(add-hook 'css-mode-hook 'flymake-css-load)
-
-(require 'flymake-cursor)
-
 ;; Make flymake work with html
 (defun flymake-html-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -172,9 +177,12 @@
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
 
-(global-auto-complete-mode t)
-
-;; Ensure auto-complete
-(ac-flyspell-workaround)
+;;;;;;;;;;;;;;;;;;;;
+;; Themes
+;;;;;;;;;;;;;;;;;;;;
+(if (string-match "Emacs 24" (version))
+    (load-theme 'zenburn t) ;; use zenburn as the default theme
+  (message "You are not running Emacs 24. Theming disabled")
+)
 
 (provide 'gral-config-ui)

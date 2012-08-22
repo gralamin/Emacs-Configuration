@@ -1,7 +1,8 @@
 ;; Contact package server, and install basic packages
 (require 'cl)
 (require 'package)
-;; Custom package archive
+
+;; Custom package archives
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
