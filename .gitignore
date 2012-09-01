@@ -2,3 +2,6 @@
 *.elc
 elpa/*
 ac-comphist.dat
+scratch.txt
+session.*
+url/
