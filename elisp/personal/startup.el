@@ -12,3 +12,5 @@
 (flyspell-mode)
 
 (put 'scroll-left 'disabled nil)
+
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))

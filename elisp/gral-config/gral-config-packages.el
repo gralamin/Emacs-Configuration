@@ -87,6 +87,7 @@
     ("\\.php\\'" php-mode php-mode)
     ("\\.py\\'" python-mode python-mode)
     ("\\.yml\\'" yaml-mode yaml-mode)
+    ("\\.pl\\'" prolog prolog-mode)
   )
 )
 
