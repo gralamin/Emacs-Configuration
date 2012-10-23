@@ -9,7 +9,6 @@
 (global-linum-mode 1) ; always show line numbers
 (global-visual-line-mode 1) ; Word wrap option.
 (size-indication-mode t); Show file size
-
 ; for xml files, use nxml-mode instead of sgml-mode
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
 
@@ -176,6 +175,27 @@
                nil 1 2 4))
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
+;;;;;;;;;;;;;;;;;;;;
+;; On Save cleanup
+;;;;;;;;;;;;;;;;;;;;
+;; (add hook 'before-save-hook (lambda ()
+;;                               (whitespace-cleanup)
+;;                               (ident-region (point-min) (point-max))))
+
+;; (add-hook 'makefile-mode-hook
+;;           (lambda ()
+;;             (setq indent-line-function
+;;                   (lambda ()
+;;                     (let*
+;;                         ((p (thing-at-point 'paragraph))
+;;                          (lines (split-string p "\n" t)))
+;;                       (when (and
+;;                              (string-match-p "^[^[:space:]]+:" (car lines))
+;;                              (not (string-match-p "^[^[:space:]]+:" (line-at-point))))
+;;                         (save-excursion
+;;                           (indent-line-to 8)
+;;                           (mark-paragraph)
+;;                           (tabify (region-beginning) (region-end)))))))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Themes
