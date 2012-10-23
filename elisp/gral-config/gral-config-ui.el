@@ -90,7 +90,6 @@
 (require 'flymake-css)
 ;;(require 'flymake-python-pyflakes)
 ;;(require 'flymake-js)
-
 ;;;;;;;;;;;;;;;;;;;;
 ;; Hooks
 ;;;;;;;;;;;;;;;;;;;;

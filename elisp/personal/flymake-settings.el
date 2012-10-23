@@ -78,7 +78,7 @@ Use CREATE-TEMP-F for creating temp copy."
           ("\\.xml\\'" flymake-xml-init)
           ("\\.html?\\'" flymake-xml-init)
           ("\\.cs\\'" flymake-simple-make-init)
-          ("\\.p[ml]\\'" flymake-perl-init)
+          ("\\.pm\\'" flymake-perl-init)
           ("\\.php[345]?\\'" flymake-php-init)
           ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup)
           ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup)
