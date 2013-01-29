@@ -32,7 +32,6 @@
     magit
     magithub
     org
-    python-mode
     rainbow-mode
     revive
     js2-mode
@@ -75,7 +74,7 @@
                                    (package-install ',package))
                                  (,mode)))))
 
-(autoload 'python-mode "python-mode" "Python Mode." t)
+(autoload 'python "python" "Python Mode." t)
 
 (defvar gral-auto-install-alist
   '(
@@ -85,7 +84,7 @@
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
     ("\\.php\\'" php-mode php-mode)
-    ("\\.py\\'" python-mode python-mode)
+    ("\\.py\\'" python python)
     ("\\.yml\\'" yaml-mode yaml-mode)
     ("\\.pl\\'" prolog prolog-mode)
   )
@@ -98,7 +97,7 @@
     (unless (package-installed-p package)
       (gral-auto-install extension package mode))))
 
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python))
 
 (provide 'gral-config-packages)
 ;;; auto-package.el ends here
