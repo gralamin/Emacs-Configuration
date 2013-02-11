@@ -19,6 +19,10 @@ Prerequistes
 ============
 Assumes pylint, pyflakes, and pep8 are installed.
 
+`Install jslint
+<http://stackoverflow.com/questions/8863888/how-do-i-install-jslint-on-ubuntu/>`_.
+Create a symlink to jsl called jslint.
+
 Installation
 ============
 * Create a symlink from the repository directory to .emacs.d::

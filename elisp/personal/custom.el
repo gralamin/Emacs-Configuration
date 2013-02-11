@@ -19,7 +19,7 @@
  '(nxhtml-skip-welcome t)
  '(nxml-child-indent 4)
  '(nxml-outline-child-indent 4)
- '(org-agenda-files (quote ("~/todo.org")))
+ '(org-agenda-files (quote ("~/todo.org" "~/homework.org")))
  '(org-agenda-ndays 7)
  '(org-agenda-show-all-dates t)
  '(org-agenda-skip-deadline-if-done t)
@@ -43,8 +43,8 @@
      ;; If you edit it by hand, you could mess it up, so be careful.
      ;; Your init file should contain only one such instance.
      ;; If there is more than one, they won't work right.
-     ;; DISABLED in EMACS24 to use with themes
-     )
+     '(default ((t (:inherit nil :stipple nil :background "#3f3f3f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
+     '(rst-level-3-face ((t (:background "#000000" :foreground "#7cb8bb"))) t))
   (custom-set-faces
      ;; custom-set-faces was added by Custom.
      ;; If you edit it by hand, you could mess it up, so be careful.
@@ -55,9 +55,3 @@
    '(whitespace-space ((((class color) (background light)) (:foreground "darkgray"))))
    )
   )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(rst-level-3-face ((t (:background "#000000" :foreground "#7cb8bb"))) t))

@@ -119,7 +119,7 @@
 (add-hook 'sh-mode-hook 'flymake-shell-load)
 (add-hook 'sass-mode-hook 'flymake-sass-load)
 
-;;(add-hook 'js-mode-hook 'flymake-jslint-load)
+(add-hook 'js-mode-hook 'flymake-jslint-load)
 (add-hook 'css-mode-hook 'flymake-css-load)
 
 ;;;;;;;;;;;;;;;;;;;;
