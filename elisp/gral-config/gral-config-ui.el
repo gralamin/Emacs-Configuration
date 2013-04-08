@@ -88,6 +88,7 @@
 (require 'flymake-shell)
 (require 'flymake-sass)
 (require 'flymake-css)
+(require 'php-mode)
 ;;(require 'flymake-python-pyflakes)
 ;;(require 'flymake-js)
 ;;;;;;;;;;;;;;;;;;;;
