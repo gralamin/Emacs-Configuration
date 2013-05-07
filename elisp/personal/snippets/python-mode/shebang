@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# name: shebang
+# contributor: Glen Nelson
+# key: shebang
+# --
+#!/usr/bin/env python
+# -*- mode: python; coding: utf-8 -*-

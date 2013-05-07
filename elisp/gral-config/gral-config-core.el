@@ -23,15 +23,6 @@
   (interactive)
   (set-window-width 122))
 
-;; Run unit tests asynchronously
-(defun run-chimera-unit-tests ()
-  (interactive)
-  (shell-command "cd ~/git/chimera/yycli && ./runUnitTests.py &"))
-
-(defun run-metrics-unit-tests ()
-  (interactive)
-  (shell-command "/usr/bin/python ~/git/django_chimera/manage.py test metrics &"))
-
 ;; End Wrappers for existing functions
 
 ;; New functions

@@ -197,6 +197,11 @@
 ;;                           (mark-paragraph)
 ;;                           (tabify (region-beginning) (region-end)))))))))
 
+(add-hook 'html-mode-hook
+      '(lambda()
+        (setq c-basic-offset 4)
+        (setq indent-tabs-mode nil)))
+
 ;;;;;;;;;;;;;;;;;;;;
 ;; Themes
 ;;;;;;;;;;;;;;;;;;;;
