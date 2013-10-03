@@ -20,7 +20,7 @@
   '(apache-mode
     auto-complete
     csv-mode
-    css-mode
+;;    css-mode
     flex-isearch
     flymake
     flymake-css
@@ -29,12 +29,13 @@
     flymake-sass
     flymake-shell
     flymake-python-pyflakes
+    htmlfontify
     magit
     magithub
     org
-    rainbow-mode
+;;    rainbow-mode
     revive
-    js2-mode
+;;    js2-mode
     yasnippet
     volatile-highlights)
   "A List of packages to ensure are installed at launch.")
@@ -59,12 +60,14 @@
     ;; install the missing packages
     (dolist (p gral-packages)
       (unless (package-installed-p p)
+        (message "%s %s" "Installing" p)
         (package-install p)
       )
     )
   )
 )
 
+(message "%s" "Calling install Packages")
 (gral-install-packages)
 
 (defmacro gral-auto-install (extension package mode)
@@ -74,12 +77,13 @@
                                    (package-install ',package))
                                  (,mode)))))
 
+(message "%s" "Autoloading python")
 (autoload 'python "python" "Python Mode." t)
 
 (defvar gral-auto-install-alist
   '(
     ("\\.csv\\'" csv-mode csv-mode)
-    ("\\.css\\'" css-mode css-mode)
+;;    ("\\.css\\'" css-mode css-mode)
     ("\\.less\\'" less-css-mode less-css-mode)
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
@@ -90,6 +94,8 @@
   )
 )
 
+(message "%s" "Auto install alist")
+
 (dolist (entry gral-auto-install-alist)
   (let ((extension (first entry))
         (package (second entry))
@@ -97,6 +103,7 @@
     (unless (package-installed-p package)
       (gral-auto-install extension package mode))))
 
+(message "%s" "Python to interprerter-mode-alist")
 (add-to-list 'interpreter-mode-alist '("python" . python))
 
 (provide 'gral-config-packages)
