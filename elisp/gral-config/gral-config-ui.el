@@ -69,7 +69,6 @@
 ;; Requires
 ;;;;;;;;;;;;;;;;;;;;
 (require 'yasnippet)
-(require 'rainbow-mode)
 (require 'volatile-highlights)
 
 (require 'flex-isearch)
@@ -89,6 +88,10 @@
 (require 'flymake-shell)
 (require 'flymake-sass)
 (require 'flymake-css)
+(if (string-match "Emacs 24" (version))
+    (require 'rainbow-mode)
+)
+
 ;;(require 'php-mode)
 ;;(require 'flymake-python-pyflakes)
 ;;(require 'flymake-js)

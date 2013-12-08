@@ -14,7 +14,7 @@
 ;; required because of a package.el bug
 (setq url-http-attempt-keepalives nil)
 
-(defvar gral-packages
+(defvar gral-packages-24
   '(apache-mode
     auto-complete
     csv-mode
@@ -31,10 +31,33 @@
     git-rebase-mode
     gitconfig-mode
     gitignore-mode
-;;    magit
-;;    magithub
     org
     rainbow-mode
+    revive
+    js3-mode
+    yasnippet
+    volatile-highlights
+    zenburn-theme)
+  "A List of packages to ensure are installed at launch.")
+
+(defvar gral-packages-23
+  '(apache-mode
+    auto-complete
+    csv-mode
+    flex-isearch
+    flymake
+    flymake-css
+    flymake-cursor
+    flymake-jslint
+    flymake-sass
+    flymake-shell
+    flymake-python-pyflakes
+    htmlfontify
+    git-commit-mode
+    git-rebase-mode
+    gitconfig-mode
+    gitignore-mode
+    org
     revive
     js3-mode
     yasnippet
@@ -42,8 +65,8 @@
   "A List of packages to ensure are installed at launch.")
 
 (if (string-match "Emacs 24" (version))
-    (add-to-list 'gral-packages 'zenburn-theme) ;; use zenburn as the default theme
-  (message "You are not running Emacs 24. Theming disabled")
+    (defvar gral-packages 'gral-packages-24)
+  (defvar gral-packages 'gral-packages-23)
 )
 
 (defun gral-packages-installed-p ()
@@ -81,7 +104,7 @@
 (defvar gral-auto-install-alist
   '(
     ("\\.csv\\'" csv-mode csv-mode)
-    ("\\.css\\'" css-mode css-mode)
+;;    ("\\.css\\'" css-mode css-mode)
     ("\\.less\\'" less-css-mode less-css-mode)
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
