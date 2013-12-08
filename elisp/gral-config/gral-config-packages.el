@@ -8,8 +8,6 @@
 (add-to-list 'package-archives
              '("elpa" . "http://tromey.com/elpa/") t)
 (add-to-list 'package-archives
-             '("technomancy" . "http://repo.technomancy.us/emacs/") t)
-(add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
@@ -29,12 +27,16 @@
     flymake-sass
     flymake-shell
     flymake-python-pyflakes
-    magit
-    magithub
+    git-commit-mode
+    git-rebase-mode
+    gitconfig-mode
+    gitignore-mode
+;;    magit
+;;    magithub
     org
     rainbow-mode
     revive
-    js2-mode
+    js3-mode
     yasnippet
     volatile-highlights)
   "A List of packages to ensure are installed at launch.")
@@ -83,7 +85,7 @@
     ("\\.less\\'" less-css-mode less-css-mode)
     ("\\.lua\\'" lua-mode lua-mode)
     ("\\.sass\\'" sass-mode sass-mode)
-    ("\\.php\\'" php-mode php-mode)
+;;    ("\\.php\\'" php-mode php-mode)
     ("\\.py\\'" python python)
     ("\\.yml\\'" yaml-mode yaml-mode)
     ("\\.pl\\'" prolog prolog-mode)

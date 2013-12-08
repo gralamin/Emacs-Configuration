@@ -18,6 +18,8 @@ by Gral-Config.")
 (defvar gral-config-vendor-dir (concat gral-config-dir "required/")
   "This directory house Emacs Lisp packages that are not yet available in
 ELPA (or MELPA).")
+(defvar gral-config-magit-dir (concat gral-config-dir "required/magit-git")
+  "This directory houses magit which is broken in packages.el")
 (defvar gral-config-savefile-dir (concat gral-config-dir "savefile/")
   "This folder stores all the automatically generated save/history-files.")
 
@@ -28,6 +30,7 @@ ELPA (or MELPA).")
 (add-to-list 'load-path gral-config-dir)
 (add-to-list 'load-path gral-config-modules-dir)
 (add-to-list 'load-path gral-config-vendor-dir)
+(add-to-list 'load-path gral-config-magit-dir)
 
 ;; Load packages if it exists and this is emacs 23
 (setq package-file (concat gral-config-vendor-dir "package.el"))

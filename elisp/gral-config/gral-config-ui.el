@@ -81,6 +81,7 @@
 (require 'auto-complete-config)
 
 (require 'whitespace)
+(require 'magit)
 
 (require 'flymake)
 (require 'flymake-cursor)
@@ -88,7 +89,7 @@
 (require 'flymake-shell)
 (require 'flymake-sass)
 (require 'flymake-css)
-(require 'php-mode)
+;;(require 'php-mode)
 ;;(require 'flymake-python-pyflakes)
 ;;(require 'flymake-js)
 ;;;;;;;;;;;;;;;;;;;;
