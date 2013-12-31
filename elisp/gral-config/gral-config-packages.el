@@ -32,6 +32,7 @@
     gitconfig-mode
     gitignore-mode
     org
+    php-mode
     rainbow-mode
     revive
     js3-mode
@@ -84,6 +85,7 @@
     ;; install the missing packages
     (dolist (p gral-packages)
       (unless (package-installed-p p)
+        (message "Installing %s" p)
         (package-install p)
       )
     )

@@ -16,7 +16,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key (kbd "M-p") 'occur-python)
 (global-set-key (kbd "C-X ~") 'set-122-columns)
-(global-set-key (kbd "C-X t c") 'run-chimera-unit-tests)
+(global-set-key (kbd "C-X t c a") 'run-chimera-unit-tests)
+(global-set-key (kbd "C-X t c p") 'run-chimera-unit-tests-at-path)
+(global-set-key (kbd "C-X t c c") 'run-current-chimera-unit-test)
 (global-set-key (kbd "C-X t m") 'run-metrics-unit-tests)
 (define-key global-map (kbd "C-<kp-add>") 'text-scale-increase)
 (define-key global-map (kbd "C-<kp-subtract>") 'text-scale-decrease)

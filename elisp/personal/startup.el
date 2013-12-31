@@ -14,3 +14,9 @@
 (put 'scroll-left 'disabled nil)
 
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "/local/home/nelsog4/")
+(venv-workon "chimeraEnv")

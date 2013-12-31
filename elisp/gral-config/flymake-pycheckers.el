@@ -20,4 +20,6 @@
       (flymake-mode t)
     (message "Not enabling flymake: executable '%s' not found." pycheckers-script)))
 
+(setenv "PYTHONPATH" "/home/nelsog4/git/chimera/yycli/")
+
 (provide 'flymake-pycheckers)

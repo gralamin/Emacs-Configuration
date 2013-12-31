@@ -63,7 +63,7 @@
 
 (gral-config-frame-config (selected-frame))
 
-(setq ido-enable-flex-matching t) ; fuzzy matching is a must have
+;(setq ido-enable-flex-matching t) ; fuzzy matching is a must have
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Requires
@@ -71,7 +71,7 @@
 (require 'yasnippet)
 (require 'volatile-highlights)
 
-(require 'flex-isearch)
+;(require 'flex-isearch)
 
 (require 'auto-complete)
 (require 'auto-complete-yasnippet)
@@ -133,7 +133,7 @@
 (volatile-highlights-mode t)
 (global-whitespace-mode)
 (global-auto-complete-mode t)
-(global-flex-isearch-mode t)
+;(global-flex-isearch-mode t)
 (yas-global-mode 1)
 
 ;; Ensure auto-complete

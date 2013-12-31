@@ -141,6 +141,29 @@ and so on."
          (buffer-substring (region-beginning) (region-end))
        (read-string "Google: "))))))
 
+;; Run unit tests asynchronously
+(defvar chimera-unit-test-prefix "cd ~/git/chimera/yycli && ./runUnitTests.py ")
+(defvar chimera-unit-test-postfix " &")
+(defun build-chimera-test-string (middle)
+  (concat chimera-unit-test-prefix middle chimera-unit-test-postfix))
+
+(defun run-chimera-unit-tests ()
+  (interactive)
+  (shell-command (build-chimera-test-string "")))
+
+(defun run-current-chimera-unit-test ()
+  (interactive)
+  (shell-command (build-chimera-test-string (file-truename buffer-file-name))))
+
+(defun run-chimera-unit-tests-at-path (path1)
+  (interactive (list (read-file-name "Path to run: " "~/git/chimera/yycli/testHarness/unitTests")))
+  (shell-command (build-chimera-test-string path1)))
+
+(defun run-metrics-unit-tests ()
+  (interactive)
+  (shell-command "/usr/bin/python ~/git/django_chimera/manage.py test metrics &"))
+
+
 ;; End New functions
 
 (provide 'gral-config-core)
