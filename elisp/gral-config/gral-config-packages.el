@@ -19,6 +19,7 @@
     auto-complete
     csv-mode
     css-mode
+    expand-region
     flex-isearch
     flymake
     flymake-css
@@ -31,6 +32,7 @@
     git-rebase-mode
     gitconfig-mode
     gitignore-mode
+    multiple-cursors
     org
     php-mode
     rainbow-mode
@@ -124,7 +126,7 @@
     (unless (package-installed-p package)
       (gral-auto-install extension package mode))))
 
-(add-to-list 'interpreter-mode-alist '("python" . python))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
 (provide 'gral-config-packages)
 ;;; auto-package.el ends here

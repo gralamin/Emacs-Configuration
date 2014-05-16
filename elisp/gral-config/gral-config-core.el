@@ -163,6 +163,40 @@ and so on."
   (interactive)
   (shell-command "/usr/bin/python ~/git/django_chimera/manage.py test metrics &"))
 
+(defun switch-to-unit-test()
+  (interactive)
+  (find-file
+   (replace-regexp-in-string
+    (car (last (split-string (file-truename buffer-file-name) "/") 1))
+    (concat "test_" (car (last (split-string (file-truename buffer-file-name) "/") 1)))
+    (replace-regexp-in-string "yycli" "yycli/testHarness/unitTests"
+                              (file-truename buffer-file-name)))
+   ))
+
+(defun get-test-loc()
+  (interactive)
+  (message
+   (replace-regexp-in-string
+    (car (last (split-string (file-truename buffer-file-name) "/") 1))
+    (concat "test_" (car (last (split-string (file-truename buffer-file-name) "/") 1)))
+    (replace-regexp-in-string "yycli" "yycli/testHarness/unitTests"
+                              (file-truename buffer-file-name)))
+   ))
+;;(defun switch-to-unit-test ()
+;;  (interactive)
+;;  (setq filenameList (split-string (file-truename buffer-file-name) "/"))
+;;  (setq filenameList (cons (butlast 'filenameList 1) (cons (concat "test_" (car (last 'filenameList 1))) nil)))
+;;  (if (member "yycli" 'filenameList)
+;;
+       ;; POSTIVE CASE
+;;  )
+  ;;Filename as a list of items (split-string (file-truename buffer-file-name) "/")
+  ;; find first occurance of yycli, insert testHarness/unitTests
+  ;; if no yycli, abandon.
+  ;; Find last item, change to test_<value>
+  ;;Rebuild the filename (mapconcat 'identity '(split-string (file-truename buffer-file-name)) "/")
+;;)
+
 
 ;; End New functions
 

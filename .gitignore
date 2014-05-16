@@ -5,3 +5,7 @@ ac-comphist.dat
 scratch.txt
 session.*
 url/
+eshell/
+.python-environments/
+abbrev_defs
+tramp

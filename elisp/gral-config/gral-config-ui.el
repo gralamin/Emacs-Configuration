@@ -76,11 +76,15 @@
 (require 'auto-complete)
 (require 'auto-complete-yasnippet)
 
+(require 'multiple-cursors)
+(require 'expand-region)
+
 (require 'smart-operator)
 (require 'auto-complete-config)
 
 (require 'whitespace)
 (require 'magit)
+(require 'jedi)
 
 (require 'flymake)
 (require 'flymake-cursor)
@@ -116,9 +120,44 @@
 (add-hook 'after-make-frame-functions 'gral-config-frame-config)
 
 (add-hook 'python-mode-hook 'flymake-python-pycheckers-load)
-(add-hook 'python-mode-hook '(lambda()
-                               (smart-operator-mode-on)
-                               ))
+
+;; Jedi setup
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "/local/home/nelsog4/venv/")
+
+(defun project-directory (buffer-name)
+  "Returns the root directory of the project that contains the
+given buffer. Any directory with a .git or .jedi file/directory
+is considered to be a project root."
+  (interactive)
+  (let ((root-dir (file-name-directory buffer-name)))
+    (while (and root-dir
+                (not (file-exists-p (concat root-dir ".git")))
+                (not (file-exists-p (concat root-dir ".jedi"))))
+      (setq root-dir
+            (if (equal root-dir "/")
+                nil
+              (file-name-directory (directory-file-name root-dir)))))
+    root-dir))
+
+(defun project-name (buffer-name)
+  "Returns the name of the project that contains the given buffer."
+  (let ((root-dir (project-directory buffer-name)))
+    (if root-dir
+        (file-name-nondirectory
+         (directory-file-name root-dir))
+      nil)))
+
+(defun jedi-setup-venv ()
+  "Activates the virtualenv of the current buffer."
+  (let ((project-name (project-name buffer-file-name)))
+    (when project-name (venv-workon project-name))))
+
+(setq jedi:complete-on-dot t)
+(add-hook 'python-mode-hook 'jedi-setup-venv)
+(add-hook 'python-mode-hook 'jedi:setup)
 
 ;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'sh-mode-hook 'flymake-shell-load)
@@ -213,5 +252,18 @@
     (load-theme 'zenburn t) ;; use zenburn as the default theme
   (message "You are not running Emacs 24. Theming disabled")
 )
+
+(require 'zone)
+ (defun lock-screen ()
+   "Lock screen using (zone) and xtrlock
+ calls M-x zone on all frames and runs xtrlock"
+   (interactive)
+   (save-excursion
+     ;(shell-command "xtrlock &")
+     (set-process-sentinel
+      (start-process "xtrlock" nil "xtrlock")
+      '(lambda (process event)
+         (zone-leave-me-alone)))
+     (zone-when-idle 1)))
 
 (provide 'gral-config-ui)

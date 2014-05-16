@@ -44,6 +44,17 @@
 ;; toggle menu-bar visibility
 (global-set-key (kbd "<f12>") 'menu-bar-mode)
 
+(require 'find-file-in-repository)
+(global-set-key (kbd "C-x f") 'find-file-in-repository)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(global-set-key (kbd "C-.") 'mc/edit-lines)
+(global-set-key (kbd "C-]") 'mc/mark-next-like-this)
+;; C-[ Does weird things... find better
+;;(global-set-key (kbd "C-[") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-{") 'mc/mark-all-like-this)
+
 ;;;;;;;;;;;;;;;;;;;;
 ;; Searching
 ;;;;;;;;;;;;;;;;;;;;
@@ -54,7 +65,7 @@
     (let ((case-fold-search isearch-case-fold-search))
       (occur (if isearch-regexp isearch-string
                (regexp-quote isearch-string))))))
-(global-set-key (kbd "C-s") 'flex-isearch-forward)
-(global-set-key (kbd "C-r") 'flex-isearch-backward)
+;;(global-set-key (kbd "C-s") 'flex-isearch-forward)
+;;(global-set-key (kbd "C-r") 'flex-isearch-backward)
 
 (provide 'gral-config-global-keybindings)
