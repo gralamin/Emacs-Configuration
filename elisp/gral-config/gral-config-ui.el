@@ -142,13 +142,28 @@ is considered to be a project root."
               (file-name-directory (directory-file-name root-dir)))))
     root-dir))
 
-(defun project-name (buffer-name)
+(defun project-name-old (buffer-name)
   "Returns the name of the project that contains the given buffer."
   (let ((root-dir (project-directory buffer-name)))
     (if root-dir
         (file-name-nondirectory
          (directory-file-name root-dir))
       nil)))
+
+
+(defun project-name (buffer-name)
+  "Returns the name of the project that contains the given buffer."
+  (let ((root-dir (project-directory buffer-name)))
+    (if root-dir
+        (let ((p-name (file-name-nondirectory
+                       (directory-file-name root-dir))))
+          (if (string= p-name "vats")
+              "v"
+            (if (string= p-name "chimera_metrics")
+                "ms"
+              p-name)))
+      nil)))
+
 
 (defun jedi-setup-venv ()
   "Activates the virtualenv of the current buffer."
@@ -218,6 +233,22 @@ is considered to be a project root."
                nil 1 2 4))
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/elisp//ac-dict")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python mode: Highlight ints / floats as constants
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar font-lock-number "[+-]?[0-9]+\\([eE][+-]?[0-9]*\\)?")
+(defvar font-lock-hexnumber "0[xX][0-9a-fA-F]+")
+(defun add-font-lock-numbers ()
+        (font-lock-add-keywords nil (list
+                      (list (concat "\\<\\(" font-lock-number "\\)\\>" )
+                       0 font-lock-constant-face)
+                      (list (concat "\\<\\(" font-lock-hexnumber "\\)\\>" )
+                       0 font-lock-constant-face)
+                      )))
+
+(add-hook 'python-mode-hook 'add-font-lock-numbers)
+
 ;;;;;;;;;;;;;;;;;;;;
 ;; On Save cleanup
 ;;;;;;;;;;;;;;;;;;;;

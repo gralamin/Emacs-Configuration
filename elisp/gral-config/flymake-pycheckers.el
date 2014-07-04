@@ -3,18 +3,21 @@
 ;; From http://stackoverflow.com/questions/1259873/how-can-i-use-emacs-flymake-mode-for-python-with-pyflakes-and-pylint-checking-co
 ;; Also pased on flymake-python-pyflakes.el
 
-(defun python-virtualenv-exec (env command)
-  "Run scripts in the given virtualEnv"
-  (venv-with-virtualenv-shell-command env command))
-(python-virtualenv-exec "chimera" "")
 (defun run-pycheckers-no-venv ()
   (list pycheckers-script
         (list
          (flymake-init-create-temp-buffer-copy 'flymake-create-temp-inplace))))
+
+(defun run-pycheckers-with-venv ()
+  (list pycheckers-script
+        (list
+         (flymake-init-create-temp-buffer-copy 'flymake-create-temp-inplace) venv-current-name)))
+
 (defun dynamic-venv-checking ()
-  ;;(if venv-current-name
-  ;;    ()
-    (run-pycheckers-no-venv));;)
+  (if venv-current-name
+      (run-pycheckers-with-venv)
+    (run-pycheckers-no-venv)))
+
 (defvar pycheckers-script (concat gral-config-scripts "pycheckers.sh"))
 (defvar flymake-python-pycheckers-allowed-file-name-masks '(("\\.py\\'" flymake-python-pycheckers-init)))
 
