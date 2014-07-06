@@ -1,6 +1,6 @@
 ;; Contact package server, and install basic packages
-(require 'cl)
 (require 'package)
+(require 'cl)
 
 ;; Custom package archives
 (add-to-list 'package-archives
@@ -20,6 +20,7 @@
     csv-mode
     css-mode
     expand-region
+    find-file-in-repository
     flex-isearch
     flymake
     flymake-css
@@ -35,10 +36,13 @@
     multiple-cursors
     org
     php-mode
+    phi-rectangle
     rainbow-mode
     revive
     js3-mode
+    jedi
     yasnippet
+    virtualenvwrapper
     volatile-highlights
     zenburn-theme)
   "A List of packages to ensure are installed at launch.")
@@ -47,6 +51,9 @@
   '(apache-mode
     auto-complete
     csv-mode
+    css-mode
+    expand-region
+    find-file-in-repository
     flex-isearch
     flymake
     flymake-css
@@ -55,27 +62,39 @@
     flymake-sass
     flymake-shell
     flymake-python-pyflakes
-    htmlfontify
     git-commit-mode
     git-rebase-mode
     gitconfig-mode
     gitignore-mode
+    multiple-cursors
     org
+    php-mode
+    phi-rectangle
+    rainbow-mode
     revive
     js3-mode
+    jedi
     yasnippet
-    volatile-highlights)
+    virtualenvwrapper
+    volatile-highlights
+    zenburn-theme)
   "A List of packages to ensure are installed at launch.")
 
 (if (string-match "Emacs 24" (version))
-    (defvar gral-packages 'gral-packages-24)
-  (defvar gral-packages 'gral-packages-23)
+    (defvaralias 'gral-packages 'gral-packages-24)
+  (defvaralias 'gral-packages 'gral-packages-23)
 )
 
 (defun gral-packages-installed-p ()
-  (loop for p in gral-packages
-        when (not (package-installed-p p)) do (return nil)
-        finally (return t))
+  (every #'package-installed-p gral-packages)
+)
+
+(defun gral-require-package (package)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+(defun gral-require-packages (packages)
+  (mapc #'gral-require-package packages)
 )
 
 (defun gral-install-packages ()
@@ -85,12 +104,7 @@
     (package-refresh-contents)
     (message "%s" " done.")
     ;; install the missing packages
-    (dolist (p gral-packages)
-      (unless (package-installed-p p)
-        (message "Installing %s" p)
-        (package-install p)
-      )
-    )
+    (gral-require-packages gral-packages)
   )
 )
 
