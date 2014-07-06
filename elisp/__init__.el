@@ -2,6 +2,9 @@
 
 (message "Gral-config is powering up... Be patient, Master %s!" (getenv "USER"))
 
+(defun gral-is-emacs24 ()
+  (string-match "Emacs 24" (version)))
+
 (defvar gral-repo-root (concat (file-name-directory load-file-name) ".emacs.d/")
   "The root dir of the Emacs Gral-config distribution.")
 (defvar gral-config-scripts (concat gral-repo-root "scripts/")
@@ -52,7 +55,10 @@ ELPA (or MELPA).")
 (require 'gral-config-global-keybindings)
 
 ;; config changes made through the customize UI will be store here
-(setq custom-file (concat gral-config-personal-dir "custom.el"))
+(if (gral-is-emacs24)
+    (setq custom-file (concat gral-config-personal-dir "custom24.el"))
+  (setq custom-file (concat gral-config-personal-dir "custom23.el"))
+)
 
 ;; load the personal settings (this includes `custom-file')
 (when (file-exists-p gral-config-personal-dir)
