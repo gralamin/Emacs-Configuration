@@ -1,5 +1,11 @@
 ;;; init.el Use as your .emacs
 
+; Unfortunately some libraries require paths to be set before custom should be
+; loaded. Set these paths here.
+(defvar 'gral-venv-location "/local/home/nelsog4/venv/")
+
+;;;
+
 (message "Gral-config is powering up... Be patient, Master %s!" (getenv "USER"))
 
 (defun gral-is-emacs24 ()
@@ -15,9 +21,9 @@
   "This directory houses all of the built-in Gral-Config module. You should
 avoid modifying the configuration there.")
 (defvar gral-config-personal-dir (concat gral-config-dir "personal/")
-  "Users of Emacs Gral-Config are encouraged to keep their personal configuration
-changes in this directory. All Emacs Lisp files there are loaded automatically
-by Gral-Config.")
+  "Users of Emacs Gral-Config are encouraged to keep their personal
+configuration changes in this directory. All Emacs Lisp files there are loaded
+automatically by Gral-Config.")
 (defvar gral-config-vendor-dir (concat gral-config-dir "required/")
   "This directory house Emacs Lisp packages that are not yet available in
 ELPA (or MELPA).")

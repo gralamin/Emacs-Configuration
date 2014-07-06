@@ -44,6 +44,9 @@ After loading up for the first time, install jedi::
 
     M-x jedi:install-server
 
+* Edit ``__init__.el``, replace the paths at the top of the file with relevant
+  paths for your configuration.
+
 
 Running Emacs as a Daemon
 =========================
