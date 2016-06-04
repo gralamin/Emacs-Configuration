@@ -1,7 +1,5 @@
-*~
-*.elc
-elpa/*
-ac-comphist.dat
-scratch.txt
-session.*
-url/
+custom.el
+elpa
+gral_config.el
+network-security.data
+*.eld
