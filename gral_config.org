@@ -1,0 +1,914 @@
+#+TITLE: Gral Config
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Installation
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+
+If you just wish to test the config, call =make docker=, which will spawn a
+docker instance ready to start at step 8 below.  (Note, this will not install
+docker, you must install it yourself)
+
+1. Checkout a copy of this repository
+2. Move the resulting directory to =~/.emacs.d=
+3. On ubuntu, run =make install=, skip to 8.
+4. Install emacs 25. On ubuntu run =ubuntu_install_emacs.sh= or =make emacs=.
+5. Install other mandatory packages. On ubuntu run =ubuntu_install_packages.sh=
+   or =make prereqs=.
+6. Install [[https://languagetool.org/][language tool]]
+7. Change the langtool-langauge-tool-jar, langtool-default-language, and
+   langtool-java-bin settings in this file.
+8. Launch Emacs!
+9. Call =M-x jedi:install-server= to install jedi.
+
+After setup you may need to restart Emacs one or twice while it downloads
+packages from [[* Emacs Lisp Package Archive][ELPA]] -- errors parsing html from =*tromey.com:80*= can generally
+be safely ignored.
+
+If you are missing some autoloads after an update (should manifest itself as
+=void function: foobar= errors) try M-x regen-autoloads.
+
+* Implementation
+
+This section contains all the configuration for this configuration.  This uses
+org's babel mode to load this information while keeping it in an org file.
+
+** Paths
+
+- Custom scripts and paths
+  #+name: gral-config-add-paths
+  #+begin_src emacs-lisp
+  (defvar gral-config-scripts-dir (concat gral-config-dir "scripts/"))
+  (setq custom-file (concat gral-config-dir "custom.el"))
+  (defvar gral-config-savefile-dir (concat gral-config-dir "savefile/"))
+  (unless (file-exists-p gral-config-savefile-dir)
+    (make-directory gral-config-savefile-dir))
+  #+end_src
+
+** Packages
+
+- Set up package repositories and fetching functions
+  #+name: gral-config-packages-setup
+  #+begin_src emacs-lisp
+  (setq package-archives
+        '(("gnu"         . "http://elpa.gnu.org/packages/")
+          ("org"         . "http://orgmode.org/elpa/")
+          ("melpa"       . "http://melpa.org/packages/")
+          ("marmalade"   . "http://marmalade-repo.org/packages/")))
+  (package-initialize)
+
+  (defun gral-require-package (package)
+    (unless (package-installed-p package)
+      (package-install package)))
+
+  (defun gral-config-install-if-needed (packages)
+    "Install packages using ELPA if not installed locally."
+    (when packages
+      (unless package-archive-contents
+        (package-refresh-contents))
+      (mapc #'gral-require-package packages)))
+  #+end_src
+
+- Always required package list
+  #+name:gral-config-packages
+  #+begin_src emacs-lisp
+  (defvar gral-packages
+    '(
+      ac-helm
+      async
+      auto-complete
+      deferred
+      el-mock
+      electric-spacing
+      epc
+      flx-ido
+      flymake
+      helm
+      jedi
+      langtool
+      magit
+      multiple-cursors
+      nyan-mode
+      org
+      phi-rectangle
+      pkg-info
+      projectile
+      python-environment
+      pyvenv
+      rainbow-mode
+      volatile-highlights
+      yasnippet
+      zenburn-theme
+  ))
+  #+end_src
+
+- Install the packages
+  #+name:gral-config-packages-install
+  #+begin_src emacs-lisp
+    (gral-config-install-if-needed gral-packages)
+  #+end_src
+
+** Start up
+
+- Packages to load on startup, instead of on demand, due to being used every
+  session.
+  #+name: gral-config-load-on-startup
+  #+begin_src emacs-lisp
+  (require 'flx-ido)
+  (require 'helm)
+  (require 'helm-config)
+  (require 'jedi)
+  (require 'magit)
+  (require 'electric-spacing)
+  (require 'flymake)
+  (require 'yasnippet)
+  (require 'volatile-highlights)
+  (require 'langtool)
+  (require 'uniquify)
+  (require 'ansi-color)
+  #+end_src
+
+** Core Functions
+
+*** Hooks
+#+name: gral-config-hook-functions
+#+begin_src emacs-lisp
+(defun gral-config-local-column-number-mode ()
+  (make-local-variable 'column-number-mode)
+  (column-number-mode t))
+
+(defun gral-config-local-comment-auto-fill ()
+  (set (make-local-variable 'comment-auto-fill-only-comments) t)
+  (auto-fill-mode t))
+
+(defun gral-config-turn-on-save-place-mode ()
+  (setq save-place t))
+
+(defun gral-config-turn-on-whitespace ()
+  (whitespace-mode t))
+#+end_src
+
+#+name: gral-config-add-local-column-number-mode
+#+begin_src emacs-lisp
+(add-hook 'gral-config-coding-hook 'gral-config-local-column-number-mode)
+#+end_src
+
+#+name: gral-config-add-local-comment-auto-fill
+#+begin_src emacs-lisp
+(add-hook 'gral-config-coding-hook 'gral-config-local-comment-auto-fill)
+#+end_src
+
+#+name: gral-config-add-pretty-lambdas
+#+begin_src emacs-lisp
+  (when (window-system)
+    (add-hook 'gral-config-coding-hook 'gral-config-pretty-lambdas))
+#+end_src
+
+#+name: gral-config-run-gral-config-coding-hook
+#+begin_src emacs-lisp
+(defun run-gral-config-coding-hook ()
+  "Enable things that are convenient across all coding buffers."
+  (run-hooks 'gral-config-coding-hook))
+#+end_src
+
+*** Buffer functions
+
+#+begin_src emacs-lisp
+(defun gral:refresh-file ()
+  "Wrapper for revert-buffer that is useful for automating."
+  (interactive)
+  (revert-buffer t t t)
+  )
+#+end_src
+
+#+begin_src emacs-lisp
+(defun gral:toggle-current-window-dedication ()
+  "Dedicate a window to the current buffer, so it can't be changed."
+ (interactive)
+ (let* ((window    (selected-window))
+        (dedicated (window-dedicated-p window)))
+   (set-window-dedicated-p window (not dedicated))
+   (message "Window %sdedicated to %s"
+            (if dedicated "no longer " "")
+            (buffer-name))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun gral:indent-buffer ()
+  "Indents the entire buffer."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun gral:untabify-buffer ()
+  "Untapifys the entire buffer."
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun gral:cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer."
+  (interactive)
+  (gral-config-indent-buffer)
+  (gral-config-untabify-buffer)
+  (whitespace-cleanup))
+#+end_src
+
+*** Path functions
+These functions define different path operations
+
+#+begin_src emacs-lisp
+;; Contains pathing related functions
+
+(defun flatten(x)
+  (cond ((null x) nil)
+    ((listp x) (append (flatten (car x)) (flatten (cdr x))))
+    (t (list x))))
+
+(defun my-filter (condp lst)
+  (delq nil
+        (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
+
+(defun string/ends-with (string suffix)
+  "Return t if STRING ends with SUFFIX."
+  (and (string-match (rx-to-string `(: ,suffix eos) t)
+                      string)
+    t))
+
+(defun gral:path-join (base_path &rest paths)
+  "Returns a single path built on each specified path."
+  (if paths
+      (__gral:path-join base_path (my-filter 'identity (flatten paths)))
+    (file-name-as-directory base_path))
+)
+
+(defun __gral:path-join (base_path paths)
+  "Recursive form of the function that does the actual work"
+  (if paths
+      (if (car paths)
+          (__gral:path-join (concat (file-name-as-directory base_path) (car paths)) (cdr paths))
+        (__gral:path-join base_path (cdr paths)))
+    base_path)
+)
+
+(defun gral:path-project-absolute (path)
+  "Returns a projectile based absolute version of the given path."
+   (if (projectile-project-root)
+      (if (and path
+               (string-match (projectile-project-root) path))
+          path
+        (gral:path-join (projectile-project-root) path))
+    path)
+)
+
+(defun gral:path-test-project-absolute (path test-path)
+  "Returns a projectile based absolute version of the given path."
+   (if (projectile-project-root)
+      (if (and path
+               (string-match (projectile-project-root) path))
+          path
+        (gral:path-join (projectile-project-root) test-path path))
+    path)
+)
+
+(defun gral:get-file-name (f)
+  "Get the file name of f."
+  (car (last (split-string f "/") 1))
+)
+
+(defun gral:get-package (f)
+  "Get the first package that matches f."
+  (if gral:prj-packages
+      (__gral:get-first-matching-package (gral:path-project-absolute f) gral:prj-packages)
+    (gral:path-project-absolute gral:prj-code-path))
+)
+
+(defun gral:get-test-package (f test-path)
+  "Get the first package that matches f."
+  (if gral:prj-packages
+      (__gral:get-first-matching-test-package (gral:path-project-absolute f) test-path gral:prj-packages)
+    (gral:path-project-absolute gral:prj-code-path))
+)
+
+(defun __gral:get-first-matching-package (f remaining)
+  (if remaining
+      (let ((first (gral:path-project-absolute (car remaining)))
+            (rest (cdr remaining)))
+        (if (string-match first f)
+            (car remaining)
+          (__gral:get-first-matching-package f rest)))
+    nil)
+)
+(defun __gral:get-first-matching-test-package (f test-path remaining)
+  (if remaining
+      (let ((first (gral:path-join (gral:path-test-project-absolute (car remaining) test-path)))
+            (rest (cdr remaining)))
+        (if (string-match first f)
+            (car remaining)
+          (__gral:get-first-matching-test-package f test-path rest)))
+    nil)
+)
+
+(defun gral:get-test-path-for-package (package test-path)
+  (let ((x (__gral:get-test-path-for-package package test-path)))
+    (if (string/ends-with x "/")
+       x
+    (concat x "/"))))
+
+(defun __gral:get-test-path-for-package (package test-path)
+  "Get the package corresponding to the testpackage."
+  (let ((unit-test-path (gral:path-project-absolute test-path)))
+    (if (member package gral:prj-packages)
+        (gral:path-join unit-test-path package)
+      unit-test-path))
+)
+
+(defun gral:file-to-test (f test-path)
+  "Get the test corresponding to the given file."
+  (let ((package (gral:get-test-package f test-path)))
+    (let ((testpath (gral:get-test-path-for-package package test-path))
+          (packagepath (gral:path-project-absolute package))
+          (testname (gral:get-test-file-name f))
+          (filename (gral:get-file-name f))
+          (abspath (gral:path-project-absolute f)))
+      (gral:path-join testpath
+                      (my-filter '(lambda (f) (null (or (equal (length f) 0) (equal f "/") (equal f "\\"))))
+                                 (cdr (split-string (file-name-directory abspath) packagepath)))
+                      (replace-regexp-in-string filename testname (file-name-nondirectory abspath)))))
+)
+
+(defun gral:test-to-file (f test-path)
+  "Get the file corresponding to the given file"
+  (let ((package (gral:get-test-package f test-path)))
+    (let ((testpath (gral:get-test-path-for-package package test-path))
+          (packagepath (gral:path-project-absolute package))
+          (filename (gral:get-file-name f))
+          (codename (gral:get-code-file-name f))
+          (abspath (gral:path-project-absolute f)))
+      (gral:path-join packagepath
+                      (my-filter '(lambda (f) (null (or (equal (length f) 0) (equal f "/") (equal f "\\"))))
+                                 (cdr (split-string (file-name-directory abspath) testpath)))
+                      (replace-regexp-in-string filename codename (file-name-nondirectory abspath)))))
+)
+
+
+(defun gral:get-test-file-name (f)
+  "Get the name of the current file's test file (usually test_foo for foo)"
+  (format gral:prj-test-format (gral:get-file-name f))
+)
+
+(defun gral:get-code-file-name (f)
+  "Get the name of the current test's file (usually foo for test_foo)"
+  (funcall gral:prj-test-reverse (gral:get-file-name f))
+)
+
+#+end_src
+
+*** Project functions
+These likely need some path functions (gral-config-path) to help.
+
+#+begin_src emacs-lisp
+(defun gral:switch-int-test (buffer)
+  "Switch to/from integration test."
+  (interactive)
+  (find-file (__gral:switch-int-test buffer))
+)
+(defun __gral:switch-int-test (buffer)
+  (let ((filename (file-truename buffer)))
+    (if (string-match gral:prj-integration-test-path filename)
+      (__gral:test-to-code filename
+                           gral:prj-integration-test-path)
+    (if (string-match gral:prj-unit-test-path filename)
+        (__gral:test-to-test filename
+                             gral:prj-unit-test-path
+                             gral:prj-integration-test-path)
+      (__gral:code-to-test filename gral:prj-integration-test-path))))
+)
+(defun gral:switch-current-int-test ()
+  (interactive)
+  (find-file (__gral:switch-int-test (buffer-file-name)))
+)
+(defun gral:switch-unit-test (buffer)
+  "Switch to/from unit test."
+  (interactive
+     (read-file-name "For which file? "))
+  (find-file (__gral:switch-unit-test buffer))
+)
+(defun gral:switch-current-unit-test ()
+  (interactive)
+  (find-file (__gral:switch-unit-test (buffer-file-name)))
+)
+(defun __gral:switch-unit-test (buffer)
+  (let ((filename (file-truename buffer)))
+    (if (string-match gral:prj-unit-test-path filename)
+      (__gral:test-to-code filename
+                           gral:prj-unit-test-path)
+    (if (string-match gral:prj-integration-test-path filename)
+        (__gral:test-to-test filename
+                             gral:prj-integration-test-path
+                             gral:prj-unit-test-path)
+      (__gral:code-to-test filename gral:prj-unit-test-path))))
+)
+(defun __gral:code-to-test (filename test-path)
+  "Switch from code to test"
+   (gral:file-to-test filename test-path)
+)
+(defun __gral:test-to-code (filename test-path)
+  "Switch from code to test"
+   (gral:test-to-file filename test-path)
+)
+(defun __gral:test-to-test (filename from-path to-path)
+  "Switch from from-path to to-path"
+   (gral:file-to-test
+     (gral:test-to-file filename from-path)
+      to-path)
+)
+(defun gral:switch-test (isunit buffer)
+  "Switch to unit/integration test of buffer."
+  (interactive
+    (list
+      (y-or-n-p "Switch to unit test? (no=integration)")
+      (read-file-name "For which file? ")))
+  (if isunit
+      (gral:switch-unit-test buffer)
+    (gral:switch-int-test buffer))
+)
+(defun gral:run-unit-tests ()
+  "TODO: Run all unit tests."
+)
+(defun gral:run-unit-tests-at-path ()
+  "TODO: Run unit tests at a path"
+)
+(defun gral:run-int-tests ()
+  "TODO: Run all integration tests"
+)
+(defun gral:run-int-tests-at-path ()
+  "TODO: Run int tests at a path"
+)
+(defun gral:run-test-current ()
+  "TODO: Run current test file, figuring out if unit or integration"
+)
+#+end_src
+
+** Bindings
+
+*** Rectangles
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-X r k") 'kill-rectangle)
+(global-set-key (kbd "C-X r d") 'delete-rectangle)
+(global-set-key (kbd "C-X r y") 'yank-rectangle)
+(global-set-key (kbd "C-X r o") 'open-rectangle)
+(global-set-key (kbd "C-X r c") 'clear-rectangle)
+(global-set-key (kbd "C-X r w") 'delete-whitespace-rectangle)
+(global-set-key (kbd "C-X r t") 'string-rectangle)
+(global-set-key (kbd "C-X r i") 'string-insert-rectangle)
+#+end_src
+
+*** Custom project commands
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-X t s") 'gral:switch-test)
+(global-set-key (kbd "C-X t u s") 'gral:switch-current-unit-test)
+(global-set-key (kbd "C-X t u a") 'gral:run-unit-tests)
+(global-set-key (kbd "C-X t u p") 'gral:run-unit-tests-at-path)
+(global-set-key (kbd "C-X t c") 'gral:run-test-current)
+(global-set-key (kbd "C-X t i s") 'gral:switch-current-int-test)
+(global-set-key (kbd "C-X t i a") 'gral:run-int-tests)
+(global-set-key (kbd "C-X t i p") 'gral:run-int-tests-at-path)
+#+end_src
+
+*** Files
+#+begin_src emacs-lisp
+(global-set-key [f5] 'gral:refresh-file)
+(global-set-key (kbd "C-x f") 'find-file-in-repository)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(global-set-key (kbd "C-.") 'mc/edit-lines)
+(global-set-key (kbd "C-]") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-}") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-{") 'mc/mark-all-like-this)
+#+end_src
+
+*** Font size
+#+begin_src emacs-lisp
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
+#+end_src
+
+*** Use regex searches by default.
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+#+end_src
+
+*** Windows
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f12>") 'menu-bar-mode)
+(global-set-key [pause] 'gral:toggle-current-window-dedication)
+(windmove-default-keybindings) ;; Shift+direction
+(global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
+(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
+#+end_src
+
+*** Org mode
+
+#+begin_src emacs-lisp
+  (define-key global-map "\C-ca" 'org-agenda)
+  (define-key global-map "\C-cl" 'org-store-link)
+#+end_src
+
+*** Search
+#+begin_src emacs-lisp
+;; add occur to searching to get all occurences of search string
+(define-key isearch-mode-map (kbd "C-o")
+  (lambda ()
+    (interactive)
+    (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string
+               (regexp-quote isearch-string))))))
+#+end_src
+
+*** maggit
+
+#+begin_src
+  (global-set-key (kbd "C-x g") 'magit-status)
+  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+#+end_src
+
+** Misc
+
+*** Theme
+#+begin_src emacs-lisp
+(load-theme 'zenburn t)
+#+end_src
+
+*** Frame-setup
+#+begin_src emacs-lisp
+(when window-system
+  (setq frame-title-format
+      '("" invocation-name " gral-config " (:eval (if (buffer-file-name)
+                                                      (abbreviate-file-name (buffer-file-name))
+                                                    "%b"))))
+  (blink-cursor mode -1)
+  (when (require 'mwheel nil 'no-error) (mouse-wheel-mode t)))
+
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+
+  (setq c-basic-offset 4
+        c-default-style "linux"
+        case-fold-search t
+        column-number-mode t
+        cua-mode t
+        echo-keystrokes 0.1
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        fill-column 80
+        font-lock-maximum-decoration t
+        ident-tabs-mode nil
+        indicate-empty-lines t
+        inhibit-startup-message t
+        org-agenda-files (quote ("~/todo.org" "~/notes.org"))
+        org-agenda-ndays 7
+        org-agenda-show-all-dates t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-start-on-weekday nil
+        org-deadline-warning-days 14
+        org-default-notes-file "~/notes.org"
+        org-fast-tag-selection-single-key (quote expert)
+        org-reverse-note-order t
+        scroll-step 2
+        sgml-basic-offset 5
+        shift-select-mode t
+        show-trailing-whitespace t
+        sterm-mouse-mode t
+        transient-mark-mode t
+        uniquify-buffer-name-style 'forward
+        vc-annotate-background "#2B2B2B"
+        vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3")))
+        vc-annotate-very-old-color "#DC8CC3"
+        visible-bell t
+        which-function-mode t
+        whitespace-line-column 80
+        whitespace-line-column 80
+        whitespace-style (quote (face tabs spaces trailing lines-tail space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark)))
+   (set-scroll-bar-mode 'right)
+   (setq x-select-enable-clipboard t)
+   (tool-bar-mode -1) ; don't show the toolbar
+   (menu-bar-mode -1) ; don't show the menu
+   (fset 'yes-or-no-p 'y-or-n-p)
+   (global-hl-line-mode 1)
+   ; display line numbers in margin (fringe). Emacs 23 only.
+   (global-linum-mode 1) ; always show line numbers
+   (global-visual-line-mode 1) ; Word wrap option.
+#+end_src
+
+*** Setup hooks
+#+begin_src emacs-lisp
+;; When saving files, set execute permission if #! is in first line.
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+;; delete \b at line ends before saving a file
+(add-hook 'write-file-hooks 'delete-trailing-whitespace)
+
+(defun run-local-vars-mode-hook ()
+  "Run a hook for the major-mode after the local variables have been processed."
+  (run-hooks (intern (concat (symbol-name major-mode) "-local-vars-hook"))))
+
+;; Provide a new MAJORMODE-local-vars-hook
+(add-hook 'hack-local-variables-hook 'run-local-vars-mode-hook)
+
+(add-hook 'rst-mode-hook 'whitespace-mode)
+(add-hook 'rst-mode-hook 'flyspell-mode)
+(add-hook 'fundamental-mode-hook 'whitespace-mode)
+(add-hook 'fundamental-mode-hook 'flyspell-mode)
+#+end_src
+
+*** Transparently open compressed files
+#+begin_src emacs-lisp
+(auto-compression-mode t)
+#+end_src
+
+*** Highlight matching parentheses when the point is on them.
+#+begin_src emacs-lisp
+(show-paren-mode 1)
+#+end_src
+
+*** ido
+#+begin_src emacs-lisp
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+#+end_src emacs-lisp
+
+*** Other, spell checking, tabs, imenu and a coding hook
+#+begin_src emacs-lisp
+  (set-default 'indent-tabs-mode nil)
+  (set-default 'indicate-empty-lines t)
+  (set-default 'imenu-auto-rescan t)
+
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (eval-after-load "ispell"
+    '(when (executable-find ispell-program-name)
+       (add-hook 'text-mode-hook 'turn-on-flyspell)))
+
+  (defvar gral-config-coding-hook nil
+    "Hook that gets run on activation of any programming mode.")
+
+  ;; Seed the random-number generator
+  (random t)
+#+end_src
+
+*** functions for prettier source code
+#+begin_src emacs-lisp
+(defun gral-config-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+#+end_src
+
+*** Deal with emacs temp files
+
+#+begin_src emacs-lisp
+(defvar user-temporary-file-directory
+  (concat temporary-file-directory user-login-name "/"))
+(make-directory user-temporary-file-directory t)
+(setq backup-by-copying t)
+(setq backup-directory-alist
+      `(("." . ,user-temporary-file-directory)
+        (,tramp-file-name-regexp nil)))
+(setq auto-save-file-name-transforms
+      `((".*" ,user-temporary-file-directory t)))
+(setq delete-auto-save-files t)                ; no "#" files after a save
+(setq auto-save-list-file-prefix nil)        ; don't record sessions
+#+end_src
+
+*** Default to unified diffs
+#+begin_src emacs-lisp
+(setq diff-switches "-u")
+#+end_src
+*** langtool
+#+begin_src emacs-lisp
+(setq langtool-language-tool-jar "/opt/LanguageTool/languagetool-commandline.jar")
+(setq langtool-default-language "en-CA")
+(setq langtool-java-bin "/usr/bin/java")
+#+end_src
+
+** Helm
+Helm configuration has some bindings and some misc work.
+
+#+begin_src
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t)
+
+(helm-mode 1)
+(helm-autoresize-mode t)
+(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+#+end_src
+
+** Registers
+
+Set registers to allow you to jump to most often used files quickly. This works
+by calling =C-x r j= followed by the letter of the register (i for =init.el=, g
+for this file) to jump to it.
+
+#+name: gral-config-registers
+#+begin_src emacs-lisp :results silent
+  (dolist
+      (r `((?i (file . ,(concat gral-config-dir "init.el")))
+           (?g (file . ,(concat gral-config-dir "gral-config.org")))))
+    (set-register (car r) (cadr r)))
+#+end_src
+
+
+** Python Specific
+
+#+begin_src emacs_lisp
+  (setq jedi:complete-on-dot t)
+#+end_src
+
+*** pycheckers
+
+#+begin_src emacs-lisp
+(defun run-pycheckers-no-venv ()
+  (message "looking for pycheckers at %s" pycheckers-script)
+  (list pycheckers-script
+        (list
+         (flymake-init-create-temp-buffer-copy 'flymake-create-temp-inplace))))
+
+(defvar pycheckers-script (concat gral-config-scripts-dir "pycheckers.sh"))
+(defvar flymake-python-pycheckers-allowed-file-name-masks '(("\\.py\\'" flymake-python-pycheckers-init)))
+
+(defun flymake-python-pycheckers-init ()
+  (run-pycheckers-no-venv)
+  )
+
+(defun flymake-python-pycheckers-load ()
+  (interactive)
+  (set (make-local-variable 'flymake-allowed-file-name-masks)
+       flymake-python-pycheckers-allowed-file-name-masks)
+  (if (executable-find pycheckers-script)
+      (flymake-mode t)
+    (message "Not enabling flymake: executable '%s' not found." pycheckers-script)))
+#+end_src
+
+*** virtualenv
+
+pyvenv makes external processes run in the current virtual environment. Any
+functions therefore are for virtualenv specific changes.
+
+*** hooks
+
+Setup mode specific hooks here, and functions for interacting with virtualenvs
+
+#+begin_src emacs-lisp
+(add-hook 'python-mode-local-vars-hook 'whitespace-mode)
+;(add-hook 'python-mode-local-vars-hook 'jedi-setup-venv)
+(add-hook 'python-mode-local-vars-hook 'jedi:setup)
+(add-hook 'python-mode-local-vars-hook 'flymake-python-pycheckers-load)
+(add-hook 'python-mode-local-vars-hook 'projectile-mode)
+#+end_src
+
+** Eshell
+#+begin_src emacs-lisp
+  (setq eshell-cmpl-cycle-completions nil
+        eshell-save-history-on-exit t
+        eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'")
+
+  (eval-after-load 'esh-opt
+    '(progn
+       (require 'em-cmpl)
+       (require 'em-prompt)
+       (require 'em-term)
+       ;; TODO: for some reason requiring this here breaks it, but
+       ;; requiring it after an eshell session is started works fine.
+       ;; (require 'eshell-vc)
+       (setenv "PAGER" "cat")
+       ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
+       (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
+                 '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
+       (add-to-list 'eshell-visual-commands "ssh")
+       (add-to-list 'eshell-visual-commands "tail")
+       (add-to-list 'eshell-command-completions-alist
+                    '("gunzip" "gz\\'"))
+       (add-to-list 'eshell-command-completions-alist
+                    '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
+#+end_src
+
+The =eshell= directory holds alias definitions and history information.  It is
+much like a =.bashrc= file for those who are familiar with bash.  This set the
+value of =eshell-directory-name= to point to the =eshell= directory in this
+directory.  The =alias= file is pre-populated with some generally applicable
+aliases.
+
+#+begin_src emacs-lisp
+  (setq eshell-directory-name
+        (expand-file-name "./" (expand-file-name "eshell" gral-config-dir)))
+#+end_src
+
+** Custom Project Variables
+Using defcustom, we can create variables for projects to overwrite here.
+
+#+begin_src emacs-lisp
+(defcustom gral:prj-unit-test-path "test/unit/"
+  "Path to join with (projectile-project-root) to get the path to unit tests."
+  :type 'string
+  :group 'gral:project
+)
+(defcustom gral:prj-integration-test-path "test/integration/"
+  "Path to join with (projectile-project-root) to get the path to the integration tests."
+  :type 'string
+  :group 'gral:project
+)
+(defcustom gral:prj-code-path ""
+  "Path to join with (projectile-project-root) to get the path to source code."
+  :type 'string
+  :group 'gral:project
+)
+(defcustom gral:prj-unit-test-runner "nosetests"
+  "The command to call to use to run unit tests."
+  :type 'sexp
+  :group 'gral:project
+)
+(defcustom gral:prj-integration-test-runner "nosetests"
+  "The command to call to use to run integration tests."
+  :type 'sexp
+  :group 'gral:project
+)
+(defcustom gral:prj-current-unit-test-remove-file nil
+  "Set to T to make run current unit test behave like run all unit tests."
+  :type 'boolean
+  :group 'gral:project
+)
+(defcustom gral:prj-current-integration-test-remove-file nil
+  "Set to T to make run current integration test behave like run all integration tests."
+  :type 'boolean
+  :group 'gral:project
+)
+(defcustom gral:prj-test-format "test_%s"
+  "Test prefix format."
+  :type 'string
+  :group 'gral:project
+)
+(defcustom gral:prj-test-reverse (lambda (file) (car (last (split-string file "test_") 1)))
+  "Function that reverses a test to its original file. Passed in the file name."
+  :type 'function
+  :group 'gral:project
+)
+(defcustom gral:prj-build-unit-test-command (lambda (args) (concat "cd "
+                                                              (projectile-project-root) " && "
+                                                              gral:unit-test-runner " "
+                                                              args " &"))
+  "Function that builds the command to run the unit tests."
+  :type 'function
+  :group 'gral:project
+)
+(defcustom gral:prj-build-integration-test-command (lambda (args) (concat "cd "
+                                                              (projectile-project-root) " && "
+                                                              gral:integration-test-runner " "
+                                                              args " &"))
+  "Function that builds the command to run the integration tests."
+  :type 'function
+  :group 'gral:project
+)
+(defcustom gral:prj-packages nil
+  "A list of different multiple prj-code-paths."
+  :type 'string
+  :group 'gral:project
+)
+(defcustom gral:virtual-envs nil
+  "A list of different virtual-envs. Will not be used if nil."
+  :type 'list
+  :group 'gral:project
+)
+#+end_src
+
+** Customize
+#+name: m-x-customize-customizations
+#+begin_src emacs-lisp
+  (load custom-file 'noerror)
+#+end_src

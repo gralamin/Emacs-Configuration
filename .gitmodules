@@ -1,3 +1,0 @@
-[submodule "elisp/required/magit-git"]
-	path = elisp/required/magit-git
-	url = git://github.com/magit/magit.git
