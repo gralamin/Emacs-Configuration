@@ -58,7 +58,20 @@ Using `.dir-locals.el` to set some variables, this provides options for switchin
 and integration tests, as well as running them.
 
 ```
-TODO example dir locals
+((python-mode
+  (fill-column . 79)
+  (project-venv-name . "foo")
+  (whitespace-line-column . 79)
+  (gral:prj-code-path . "")
+  (gral:prj-unit-test-path . "tests/unit/")
+  (gral:prj-unit-test-runner . "nosetests -P")
+  (gral:prj-integration-test-path . "tests/integration/")
+  (gral:prj-integration-test-runner . "foo execute")
+ 
+   ;;; prj-packages supports multiple packages
+  (gral:prj-packages . ("foo" "bar"))
+  )
+)
 ```
 
 List of keybindings:
